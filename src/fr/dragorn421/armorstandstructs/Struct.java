@@ -50,9 +50,23 @@ public class Struct
 						EulerAngle headPose = null;
 						if(Util.isStairs(b.getItemType()))
 							headPose = Util.getStairsRotation(b.getData());
+						else if(Util.isWoodLog(b.getItemType()))
+						{
+							headPose = Util.getWoodLogRotation(b.getData());
+							b.setData((byte) (b.getData() % 4));
+						}
 						spawn.setX(loc.getX() + i * Const.armorStandHeadSize);
-						spawn.setY(loc.getY() + j * Const.armorStandHeadSize + ((headPose != null && headPose.getZ() != 0D)?Const.armorStandHeadRotationOffset:0));
+						spawn.setY(loc.getY() + j * Const.armorStandHeadSize);
 						spawn.setZ(loc.getZ() + k * Const.armorStandHeadSize);
+						if(headPose != null)
+						{/**/
+							if(headPose.getZ() == Math.PI/2)
+								 spawn.add(-Const.armorStandHeadRotation90OffsetX, Const.armorStandHeadRotation90OffsetY, 0);
+							else if(headPose.getZ() == Math.PI)
+								 spawn.add(0, Const.armorStandHeadRotation180Offset, 0);//*/
+							if(headPose.getX() == Math.PI/2)
+								spawn.add(0, Const.armorStandHeadRotation90OffsetY, -Const.armorStandHeadRotation90OffsetX);
+						}
 						final ArmorStand as = w.spawn(spawn, ArmorStand.class);
 						as.setGravity(false);
 						if(headPose != null)

@@ -138,12 +138,14 @@ public class Util
 		if((data & 0b100) != 0)
 		{
 			//y = Math.PI;TODO what axis is which
+			//y = Math.PI/2;
 			z = Math.PI/2;
 		}
-		if((data & 0b100) != 0)
+		if((data & 0b1000) != 0)
 		{
-			y = Math.PI/2;
-			z = Math.PI/2;
+			System.out.println("woaw");
+			//y = Math.PI/2;
+			x = Math.PI/2;
 		}
 		return new EulerAngle(x, y, z);
 	}
