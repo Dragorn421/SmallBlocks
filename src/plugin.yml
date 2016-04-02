@@ -4,5 +4,6 @@ version: 0.1
 author: Dragorn421
 commands:
  armorstandstructs:
-  description: 
+  description: ArmorStandStructs
   usage: /armorstandstructs
+  alias: [smallblocks,sb]

@@ -143,7 +143,7 @@ public class Util
 		}
 		if((data & 0b1000) != 0)
 		{
-			System.out.println("woaw");
+			//System.out.println("woaw");
 			//y = Math.PI/2;
 			x = Math.PI/2;
 		}

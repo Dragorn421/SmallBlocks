@@ -1,5 +1,8 @@
 package fr.dragorn421.armorstandstructs;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -12,6 +15,8 @@ public class ArmorStandStructsPlugin extends JavaPlugin// implements Listener
 {
 
 	static private ArmorStandStructsPlugin instance;
+
+	final private Map<Integer, Struct> structs = new HashMap<>();
 
 	@Override
 	public void onEnable()
@@ -48,7 +53,10 @@ public class ArmorStandStructsPlugin extends JavaPlugin// implements Listener
 		switch(args[0])
 		{
 		case "convert":
-			new Struct(sel.getMinimumPoint(), sel.getMaximumPoint()).toArmorStands(sel.getMinimumPoint());
+			final Struct struct = new Struct(sel.getMinimumPoint(), sel.getMaximumPoint());
+			this.structs.put(struct.getId(), struct);
+			struct.toArmorStands(sel.getMinimumPoint());
+			p.sendMessage("Created struct #" + struct.getId());
 			break;
 		case "minimify":
 			Util.showSelection(sel, p, Material.GLASS);

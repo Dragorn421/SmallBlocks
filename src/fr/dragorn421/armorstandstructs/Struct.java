@@ -11,11 +11,15 @@ import org.bukkit.util.EulerAngle;
 public class Struct
 {
 
+	static private int increment = 0;
+
+	final private int id;
 	final private MaterialData blocks[][][];
 
 	@SuppressWarnings("deprecation")
 	public Struct(final Location from, final Location to)
 	{
+		this.id = Struct.increment++;
 		final int	sx = to.getBlockX() - from.getBlockX() + 1,
 					sy = to.getBlockY() - from.getBlockY() + 1,
 					sz = to.getBlockZ() - from.getBlockZ() + 1;
@@ -59,11 +63,11 @@ public class Struct
 						spawn.setY(loc.getY() + j * Const.armorStandHeadSize);
 						spawn.setZ(loc.getZ() + k * Const.armorStandHeadSize);
 						if(headPose != null)
-						{/**/
+						{
 							if(headPose.getZ() == Math.PI/2)
 								 spawn.add(-Const.armorStandHeadRotation90OffsetX, Const.armorStandHeadRotation90OffsetY, 0);
 							else if(headPose.getZ() == Math.PI)
-								 spawn.add(0, Const.armorStandHeadRotation180Offset, 0);//*/
+								 spawn.add(0, Const.armorStandHeadRotation180Offset, 0);
 							if(headPose.getX() == Math.PI/2)
 								spawn.add(0, Const.armorStandHeadRotation90OffsetY, -Const.armorStandHeadRotation90OffsetX);
 						}
@@ -77,6 +81,11 @@ public class Struct
 				}
 			}
 		}
+	}
+
+	public int getId()
+	{
+		return this.id;
 	}
 
 }
