@@ -54,6 +54,7 @@ public class ArmorStandStructsPlugin extends JavaPlugin// implements Listener
 			return true;
 		}
 		final Struct struct;
+		final int id;
 		switch(args[0])
 		{
 		case "convert":
@@ -86,7 +87,6 @@ public class ArmorStandStructsPlugin extends JavaPlugin// implements Listener
 					return true;
 				}
 			}
-			final int id;
 			try {
 				id = Integer.parseInt(args[1]);
 			} catch(final NumberFormatException e) {
@@ -101,6 +101,28 @@ public class ArmorStandStructsPlugin extends JavaPlugin// implements Listener
 			}
 			Util.setMetadata(p, ArmorStandStructsPlugin.MOVING_STRUCT_METADATA_KEY, struct);
 			p.sendMessage("Moving struct #" + Integer.toString(id));
+			break;
+		case "remove":
+			if(args.length == 1)
+			{
+				p.sendMessage("No struct id given");
+				return false;
+			}
+			try {
+				id = Integer.parseInt(args[1]);
+			} catch(final NumberFormatException e) {
+				p.sendMessage(args[1] + " is not a valid number");
+				return false;
+			}
+			struct = this.structs.get(id);
+			if(struct == null)
+			{
+				p.sendMessage("Struct #" + Integer.toString(id) + " doesn't exist");
+				return false;
+			}
+			struct.remove();
+			this.structs.remove(id);
+			p.sendMessage("Removed struct #" + Integer.toString(id));
 			break;
 		}
 		return true;

@@ -105,4 +105,12 @@ public class Struct
 		}
 	}
 
+	public void remove()
+	{
+		for(int i=this.armorStands.size()-1;i>=0;i--)
+		{
+			this.armorStands.get(i).remove();
+		}
+	}
+
 }
