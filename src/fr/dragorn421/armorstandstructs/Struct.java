@@ -1,5 +1,8 @@
 package fr.dragorn421.armorstandstructs;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -15,6 +18,7 @@ public class Struct
 
 	final private int id;
 	final private MaterialData blocks[][][];
+	final private List<ArmorStand> armorStands;
 
 	@SuppressWarnings("deprecation")
 	public Struct(final Location from, final Location to)
@@ -32,6 +36,7 @@ public class Struct
 					final Block b = w.getBlockAt(from.getBlockX()+i, from.getBlockY()+j, from.getBlockZ()+k);
 					this.blocks[i][j][k] = b.isEmpty()?null:new MaterialData(b.getType(), b.getData());
 				}
+		this.armorStands = new ArrayList<>();
 	}
 
 	@SuppressWarnings("deprecation")
@@ -77,6 +82,7 @@ public class Struct
 							as.setHeadPose(headPose);
 						as.setHelmet(new ItemStack(b.getItemType(), 1, b.getData()));
 						as.setVisible(false);
+						this.armorStands.add(as);
 					}
 				}
 			}
@@ -86,6 +92,17 @@ public class Struct
 	public int getId()
 	{
 		return this.id;
+	}
+
+	public void moveArmorStands(final double d, final double e, final double f)
+	{
+		final Location loc = this.armorStands.get(0).getLocation();
+		for(int i=this.armorStands.size()-1;i>=0;i--)
+		{
+			this.armorStands.get(i).getLocation(loc);
+			loc.add(d, e, f);
+			this.armorStands.get(i).teleport(loc);
+		}
 	}
 
 }

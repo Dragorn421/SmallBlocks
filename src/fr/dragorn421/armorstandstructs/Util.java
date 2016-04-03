@@ -5,6 +5,9 @@ import org.bukkit.Material;
 import org.bukkit.TreeType;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
+import org.bukkit.metadata.Metadatable;
 import org.bukkit.util.EulerAngle;
 
 import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
@@ -194,6 +197,25 @@ public class Util
 	final static public String angleToString(final EulerAngle angle)
 	{
 		return "EulerAngle{x=" + angle.getX() + ",y=" + angle.getY() + ",z=" + angle.getZ() + "}";
+	}
+
+	@SuppressWarnings("unchecked")
+	final static public <T> T getMetadata(final Metadatable from, final String key, final Class<T> clazz)
+	{
+		for(final MetadataValue v : from.getMetadata(key))
+		{
+			if(v.getOwningPlugin() == ArmorStandStructsPlugin.get() && clazz.isAssignableFrom(v.value().getClass()))
+				return (T) v.value();
+		}
+		return null;
+	}
+
+	final static public void setMetadata(final Metadatable to, final String key, final Object value)
+	{
+		if(value == null)
+			to.removeMetadata(key, ArmorStandStructsPlugin.get());
+		else
+			to.setMetadata(key, new FixedMetadataValue(ArmorStandStructsPlugin.get(), value));
 	}
 
 }
