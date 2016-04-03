@@ -5,5 +5,5 @@ author: Dragorn421
 commands:
  armorstandstructs:
   description: ArmorStandStructs
-  usage: /armorstandstructs
-  alias: [smallblocks,sb]
+  usage: /armorstandstructs <convert [hollow?] | minimify | move [struct id] | remove <struct id>>
+  aliases: [smallblocks,sb]
