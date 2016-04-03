@@ -58,9 +58,10 @@ public class ArmorStandStructsPlugin extends JavaPlugin// implements Listener
 		switch(args[0])
 		{
 		case "convert":
+			final boolean hollow = args.length==1?false:Boolean.parseBoolean(args[1]);
 			struct = new Struct(sel.getMinimumPoint(), sel.getMaximumPoint());
 			this.structs.put(struct.getId(), struct);
-			struct.toArmorStands(sel.getMinimumPoint());
+			struct.toArmorStands(sel.getMinimumPoint(), hollow);
 			p.sendMessage("Created struct #" + struct.getId());
 			break;
 		case "minimify":

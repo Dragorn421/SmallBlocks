@@ -40,7 +40,7 @@ public class Struct
 	}
 
 	@SuppressWarnings("deprecation")
-	public void toArmorStands(final Location loc)
+	public void toArmorStands(final Location loc, final boolean hollow)
 	{
 		loc.setX(loc.getBlockX() - Const.armorStandHeadSideOffset);
 		loc.setY(loc.getBlockY() - Const.armorStandHeadHeightOffset);
@@ -54,7 +54,7 @@ public class Struct
 				for(int k=0;k<this.blocks[i][j].length;k++)
 				{
 					final MaterialData b = this.blocks[i][j][k];
-					if(b != null)
+					if(b != null && (!hollow || this.isVisible(i, j, k)))
 					{
 						EulerAngle headPose = null;
 						if(Util.isStairs(b.getItemType()))
@@ -89,13 +89,32 @@ public class Struct
 		}
 	}
 
-	public int getId()
+	public boolean isVisible(final int i, final int j, final int k)
 	{
-		return this.id;
+		return !this.isOccluding(i - 1,	j,		k)
+			|| !this.isOccluding(i,		j - 1,	k)
+			|| !this.isOccluding(i,		j,		k - 1)
+			|| !this.isOccluding(i + 1,	j,		k)
+			|| !this.isOccluding(i,		j + 1,	k)
+			|| !this.isOccluding(i,		j,		k + 1);
+	}
+
+	private boolean isOccluding(final int i, final int j, final int k)
+	{
+		if(i < 0 || i >= this.blocks.length)
+			return false;
+		if(j < 0 || j >= this.blocks[i].length)
+			return false;
+		if(k < 0 || k >= this.blocks[i][j].length)
+			return false;
+		final MaterialData block = this.blocks[i][j][k];
+		return block==null?false:block.getItemType().isOccluding();
 	}
 
 	public void moveArmorStands(final double d, final double e, final double f)
 	{
+		if(this.armorStands.size() == 0)
+			return;
 		final Location loc = this.armorStands.get(0).getLocation();
 		for(int i=this.armorStands.size()-1;i>=0;i--)
 		{
@@ -111,6 +130,11 @@ public class Struct
 		{
 			this.armorStands.get(i).remove();
 		}
+	}
+
+	public int getId()
+	{
+		return this.id;
 	}
 
 }
