@@ -3,12 +3,14 @@ package fr.dragorn421.armorstandstructs;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.EulerAngle;
 
 public class Struct
@@ -20,6 +22,8 @@ public class Struct
 	final private MaterialData blocks[][][];
 	final private Location center;
 	final private List<ArmorStand> armorStands;
+
+	private BukkitTask spinTask;
 
 	@SuppressWarnings("deprecation")
 	public Struct(final Location from, final Location to)
@@ -39,6 +43,7 @@ public class Struct
 				}
 		this.center = from.clone();
 		this.armorStands = new ArrayList<>();
+		this.spinTask = null;
 	}
 
 	@SuppressWarnings("deprecation")
@@ -178,6 +183,8 @@ public class Struct
 
 	public void remove()
 	{
+		if(this.spinTask != null)
+			this.spinTask.cancel();
 		for(int i=this.armorStands.size()-1;i>=0;i--)
 		{
 			this.armorStands.get(i).remove();
@@ -187,6 +194,22 @@ public class Struct
 	public int getId()
 	{
 		return this.id;
+	}
+
+	public boolean spinRad(final double rotation, final int interval)
+	{
+		if(this.spinTask != null)
+			this.spinTask.cancel();
+		if(rotation == 0 || interval < 1)
+			return false;
+		this.spinTask = Bukkit.getScheduler().runTaskTimer(ArmorStandStructsPlugin.get(), new Runnable() {
+			@Override
+			public void run()
+			{
+				Struct.this.rotateRad(rotation);
+			}
+		}, interval, interval);
+		return true;
 	}
 
 }

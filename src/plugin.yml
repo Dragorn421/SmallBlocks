@@ -5,5 +5,5 @@ author: Dragorn421
 commands:
  armorstandstructs:
   description: ArmorStandStructs
-  usage: /armorstandstructs <convert [hollow?] | minimify | move [struct id] | remove <struct id> | rotate <struct id> <rotation>>
+  usage: /armorstandstructs <convert [hollow?] | minimify | move [struct id] | remove <struct id> | rotate <struct id> <rotation> | spin <struct id> <rotation> <interval>>
   aliases: [smallblocks,sb]

@@ -55,6 +55,7 @@ public class ArmorStandStructsPlugin extends JavaPlugin// implements Listener
 		}
 		final Struct struct;
 		final int id;
+		final double rotation;
 		switch(args[0])
 		{
 		case "convert":
@@ -142,11 +143,10 @@ public class ArmorStandStructsPlugin extends JavaPlugin// implements Listener
 				p.sendMessage(args[1] + " is not a valid number (struct id)");
 				return false;
 			}
-			final double rotation;
 			try {
 				rotation = Double.parseDouble(args[2]);
 			} catch(final NumberFormatException e) {
-				p.sendMessage(args[1] + " is not a valid number (rotation)");
+				p.sendMessage(args[2] + " is not a valid number (rotation)");
 				return false;
 			}
 			struct = this.structs.get(id);
@@ -157,6 +157,53 @@ public class ArmorStandStructsPlugin extends JavaPlugin// implements Listener
 			}
 			struct.rotateRad(Math.toRadians(rotation));
 			p.sendMessage("Rotated struct #" + Integer.toString(id) + " by " + Double.toString(rotation) + " degrees");
+			break;
+		case "spin":
+			if(args.length == 1)
+			{
+				p.sendMessage("No struct id, no rotation, no interval given");
+				return false;
+			}
+			if(args.length == 2)
+			{
+				p.sendMessage("No rotation, no interval given");
+				return false;
+			}
+			if(args.length == 3)
+			{
+				p.sendMessage("No interval given");
+				return false;
+			}
+			try {
+				id = Integer.parseInt(args[1]);
+			} catch(final NumberFormatException e) {
+				p.sendMessage(args[1] + " is not a valid number (struct id)");
+				return false;
+			}
+			try {
+				rotation = Double.parseDouble(args[2]);
+			} catch(final NumberFormatException e) {
+				p.sendMessage(args[2] + " is not a valid number (rotation)");
+				return false;
+			}
+			final int interval;
+			try {
+				interval = Integer.parseInt(args[3]);
+			} catch(final NumberFormatException e) {
+				p.sendMessage(args[3] + " is not a valid number (interval)");
+				return false;
+			}
+			struct = this.structs.get(id);
+			if(struct == null)
+			{
+				p.sendMessage("Struct #" + Integer.toString(id) + " doesn't exist");
+				return false;
+			}
+			if(struct.spinRad(Math.toRadians(rotation), interval))
+				p.sendMessage("Spinning struct #" + Integer.toString(id) + " by " + Double.toString(rotation) + " degrees every " + interval + " ticks.");
+			else
+				p.sendMessage("Stopped spinning of struct #" + Integer.toString(id));
+			break;
 		}
 		return true;
 	}
