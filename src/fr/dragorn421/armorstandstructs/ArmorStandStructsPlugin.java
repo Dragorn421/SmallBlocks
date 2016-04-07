@@ -125,6 +125,38 @@ public class ArmorStandStructsPlugin extends JavaPlugin// implements Listener
 			this.structs.remove(id);
 			p.sendMessage("Removed struct #" + Integer.toString(id));
 			break;
+		case "rotate":
+			if(args.length == 1)
+			{
+				p.sendMessage("No struct id, no rotation given");
+				return false;
+			}
+			if(args.length == 2)
+			{
+				p.sendMessage("No rotation given");
+				return false;
+			}
+			try {
+				id = Integer.parseInt(args[1]);
+			} catch(final NumberFormatException e) {
+				p.sendMessage(args[1] + " is not a valid number (struct id)");
+				return false;
+			}
+			final double rotation;
+			try {
+				rotation = Double.parseDouble(args[2]);
+			} catch(final NumberFormatException e) {
+				p.sendMessage(args[1] + " is not a valid number (rotation)");
+				return false;
+			}
+			struct = this.structs.get(id);
+			if(struct == null)
+			{
+				p.sendMessage("Struct #" + Integer.toString(id) + " doesn't exist");
+				return false;
+			}
+			struct.rotateRad(Math.toRadians(rotation));
+			p.sendMessage("Rotated struct #" + Integer.toString(id) + " by " + Double.toString(rotation) + " degrees");
 		}
 		return true;
 	}

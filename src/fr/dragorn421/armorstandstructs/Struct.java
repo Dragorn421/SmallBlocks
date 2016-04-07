@@ -18,6 +18,7 @@ public class Struct
 
 	final private int id;
 	final private MaterialData blocks[][][];
+	final private Location center;
 	final private List<ArmorStand> armorStands;
 
 	@SuppressWarnings("deprecation")
@@ -36,6 +37,7 @@ public class Struct
 					final Block b = w.getBlockAt(from.getBlockX()+i, from.getBlockY()+j, from.getBlockZ()+k);
 					this.blocks[i][j][k] = b.isEmpty()?null:new MaterialData(b.getType(), b.getData());
 				}
+		this.center = from.clone();
 		this.armorStands = new ArrayList<>();
 	}
 
@@ -45,6 +47,10 @@ public class Struct
 		loc.setX(loc.getBlockX() - Const.armorStandHeadSideOffset);
 		loc.setY(loc.getBlockY() - Const.armorStandHeadHeightOffset);
 		loc.setZ(loc.getBlockZ() - Const.armorStandHeadSideOffset);
+		this.center.setX(loc.getX() + (this.blocks.length - 1) * Const.armorStandHeadSize / 2D);
+		this.center.setY(loc.getY() + (this.blocks[0].length - 1) * Const.armorStandHeadSize / 2D);
+		this.center.setZ(loc.getZ() + (this.blocks[0][0].length - 1) * Const.armorStandHeadSize / 2D);
+		//System.out.println(" center #" + this.id + " " + this.center);//TODO debug
 		final World w = loc.getWorld();
 		final Location spawn = loc.clone();
 		for(int i=0;i<this.blocks.length;i++)
@@ -111,7 +117,7 @@ public class Struct
 		return block==null?false:block.getItemType().isOccluding();
 	}
 
-	public void moveArmorStands(final double d, final double e, final double f)
+	public void moveArmorStands(final double x, final double y, final double z)
 	{
 		if(this.armorStands.size() == 0)
 			return;
@@ -119,8 +125,54 @@ public class Struct
 		for(int i=this.armorStands.size()-1;i>=0;i--)
 		{
 			this.armorStands.get(i).getLocation(loc);
-			loc.add(d, e, f);
+			loc.add(x, y, z);
 			this.armorStands.get(i).teleport(loc);
+		}
+		center.add(x, y, z);
+	}
+
+	public void rotateRad(double rotation)
+	{
+		if(this.armorStands.size() == 0)
+			return;
+		final Location loc = this.armorStands.get(0).getLocation();
+		for(int i=this.armorStands.size()-1;i>=0;i--)
+		{
+			final ArmorStand as = this.armorStands.get(i);
+			as.getLocation(loc);
+			center.setY(loc.getY());
+			final double	x = loc.getX() - this.center.getX(),
+							z = loc.getZ() - this.center.getZ();
+			if(x != 0 || z != 0)
+			{
+				final double	h = Math.hypot(x, z),
+								r = Math.atan(x/z),
+								newR = r + rotation,
+								newX = Math.sin(newR) * h,
+								newZ = Math.cos(newR) * h;
+				if(z < 0)
+				{
+					loc.setX(this.center.getX() - newX);
+					loc.setZ(this.center.getZ() - newZ);
+				}
+				else
+				{
+					loc.setX(this.center.getX() + newX);
+					loc.setZ(this.center.getZ() + newZ);
+				}
+/*				System.out.println("Block " + as.getHelmet().getType() + ":\n"
+									+ "x " + x + "\n"
+									+ "z " + z + "\n"
+									+ "h " + h + "\n"
+									+ "r " + r + "rad = " + Math.toDegrees(r) + "deg\n"
+									+ "newR " + newR + "rad = " + Math.toDegrees(newR) + "deg\n"
+									+ "newX " + newX + "\n"
+									+ "newZ " + newZ + "\n"
+									+ "real newX " + loc.getX() + "\n"
+									+ "real newZ " + loc.getZ());//TODO debug*/
+				as.teleport(loc);
+			}
+			as.setHeadPose(as.getHeadPose().add(0, -rotation, 0));
 		}
 	}
 
