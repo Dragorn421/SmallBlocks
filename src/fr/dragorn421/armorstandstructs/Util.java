@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.TreeType;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.material.MaterialData;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.metadata.Metadatable;
@@ -140,14 +141,10 @@ public class Util
 		double x = 0, y = 0, z = 0;
 		if((data & 0b100) != 0)
 		{
-			//y = Math.PI;TODO what axis is which
-			//y = Math.PI/2;
 			z = Math.PI/2;
 		}
 		if((data & 0b1000) != 0)
 		{
-			//System.out.println("woaw");
-			//y = Math.PI/2;
 			x = Math.PI/2;
 		}
 		return new EulerAngle(x, y, z);
@@ -162,7 +159,7 @@ public class Util
 			case 0:
 				return TreeType.TREE;
 			case 1:
-				return TreeType.REDWOOD;//spruce?
+				return TreeType.REDWOOD;//spruce
 			case 2:
 				return TreeType.BIRCH;
 			case 3:
@@ -188,6 +185,84 @@ public class Util
 		{
 		case LOG:
 		case LOG_2:
+			return true;
+		default:
+			return false;
+		}
+	}
+
+	final static public boolean isReversedSlab(final byte data)
+	{
+		if((data & 0b1000) != 0)
+			return true;
+		return false;
+		// double slabs? -> seems to be separate block id
+	}
+
+	final static public boolean isSlab(final Material type)
+	{
+		switch(type)
+		{
+		case WOOD_STEP:
+		case STONE_SLAB2:
+		case STEP:
+		//case purpur slab?:
+			return true;
+		default:
+			return false;
+		}
+	}
+
+	@SuppressWarnings("deprecation")
+	final static public MaterialData getBlockForDoubleSlab(final Material type, final byte data)
+	{
+		switch(type)
+		{
+		case DOUBLE_STEP:
+			switch(data)
+			{
+			case 0://stone
+				return new MaterialData(Material.STEP);
+			case 1://sandstone
+				return new MaterialData(Material.SANDSTONE);
+			case 2://old wooden block
+				return new MaterialData(Material.WOOD);
+			case 3://cobble
+				return new MaterialData(Material.COBBLESTONE);
+			case 4://bricks
+				return new MaterialData(Material.BRICK);
+			case 5://stonebrick
+				return new MaterialData(Material.SMOOTH_BRICK);
+			case 6://netherbrick
+				return new MaterialData(Material.NETHER_BRICK);
+			case 7://quartz
+				return new MaterialData(Material.QUARTZ_BLOCK);
+			}
+			break;
+		case WOOD_DOUBLE_STEP:
+			return new MaterialData(Material.WOOD, data);
+		case DOUBLE_STONE_SLAB2:
+			switch(data)
+			{
+			case 0://red sandstone
+				return new MaterialData(Material.RED_SANDSTONE);
+			}
+			break;
+		//case double purpur slab?:
+		default:
+			break;
+		}
+		return null;
+	}
+
+	final static public boolean isDoubleSlab(final Material type)
+	{
+		switch(type)
+		{
+		case DOUBLE_STEP:
+		case DOUBLE_STONE_SLAB2:
+		case WOOD_DOUBLE_STEP:
+		//case double purpur slab?:
 			return true;
 		default:
 			return false;
