@@ -1,4 +1,4 @@
-package fr.dragorn421.armorstandstructs;
+package fr.dragorn421.smallblocks;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,19 +12,19 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.sk89q.worldedit.bukkit.selections.Selection;
 
-public class ArmorStandStructsPlugin extends JavaPlugin// implements Listener
+public class SmallBlocksPlugin extends JavaPlugin// implements Listener
 {
 
 	final static public String MOVING_STRUCT_METADATA_KEY = "moving_struct_armorstandstructs";
 
-	static private ArmorStandStructsPlugin instance;
+	static private SmallBlocksPlugin instance;
 
 	final private Map<Integer, Struct> structs = new HashMap<>();
 
 	@Override
 	public void onEnable()
 	{
-		ArmorStandStructsPlugin.instance = this;
+		SmallBlocksPlugin.instance = this;
 		SelectionToLocationConverter.getNew();
 		Bukkit.getPluginManager().registerEvents(new ListenerImpl(), this);
 		super.getLogger().info(super.getName() + " enabled!");
@@ -76,7 +76,7 @@ public class ArmorStandStructsPlugin extends JavaPlugin// implements Listener
 		case "move":
 			if(args.length == 1)
 			{
-				struct = Util.getMetadata(p, ArmorStandStructsPlugin.MOVING_STRUCT_METADATA_KEY, Struct.class);
+				struct = Util.getMetadata(p, SmallBlocksPlugin.MOVING_STRUCT_METADATA_KEY, Struct.class);
 				if(struct == null)
 				{
 					p.sendMessage("No struct id given");
@@ -84,7 +84,7 @@ public class ArmorStandStructsPlugin extends JavaPlugin// implements Listener
 				}
 				else
 				{
-					Util.setMetadata(p, ArmorStandStructsPlugin.MOVING_STRUCT_METADATA_KEY, null);
+					Util.setMetadata(p, SmallBlocksPlugin.MOVING_STRUCT_METADATA_KEY, null);
 					p.sendMessage("No longer moving struct #" + Integer.toString(struct.getId()));
 					return true;
 				}
@@ -101,7 +101,7 @@ public class ArmorStandStructsPlugin extends JavaPlugin// implements Listener
 				p.sendMessage("Struct #" + Integer.toString(id) + " doesn't exist");
 				return false;
 			}
-			Util.setMetadata(p, ArmorStandStructsPlugin.MOVING_STRUCT_METADATA_KEY, struct);
+			Util.setMetadata(p, SmallBlocksPlugin.MOVING_STRUCT_METADATA_KEY, struct);
 			p.sendMessage("Moving struct #" + Integer.toString(id));
 			break;
 		case "remove":
@@ -208,9 +208,9 @@ public class ArmorStandStructsPlugin extends JavaPlugin// implements Listener
 		return true;
 	}
 
-	static public ArmorStandStructsPlugin get()
+	static public SmallBlocksPlugin get()
 	{
-		return ArmorStandStructsPlugin.instance;
+		return SmallBlocksPlugin.instance;
 	}
 
 }

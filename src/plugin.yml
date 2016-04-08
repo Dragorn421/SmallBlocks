@@ -1,9 +1,9 @@
-main: fr.dragorn421.armorstandstructs.ArmorStandStructsPlugin
-name: ArmorStandStructs
+main: fr.dragorn421.smallblocks.SmallBlocksPlugin
+name: SmallBlocks
 version: 0.1
 author: Dragorn421
 commands:
- armorstandstructs:
-  description: ArmorStandStructs
-  usage: /armorstandstructs <convert [hollow?] | minimify | move [struct id] | remove <struct id> | rotate <struct id> <rotation> | spin <struct id> <rotation> <interval>>
-  aliases: [smallblocks,sb]
+ smallblocks:
+  description: SmallBlocks main command
+  usage: /sb <convert [hollow?] | minimify | move [struct id] | remove <struct id> | rotate <struct id> <rotation> | spin <struct id> <rotation> <interval>>
+  aliases: [sb]

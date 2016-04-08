@@ -1,4 +1,4 @@
-package fr.dragorn421.armorstandstructs;
+package fr.dragorn421.smallblocks;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

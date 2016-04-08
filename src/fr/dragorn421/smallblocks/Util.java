@@ -1,4 +1,4 @@
-package fr.dragorn421.armorstandstructs;
+package fr.dragorn421.smallblocks;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -279,7 +279,7 @@ public class Util
 	{
 		for(final MetadataValue v : from.getMetadata(key))
 		{
-			if(v.getOwningPlugin() == ArmorStandStructsPlugin.get() && clazz.isAssignableFrom(v.value().getClass()))
+			if(v.getOwningPlugin() == SmallBlocksPlugin.get() && clazz.isAssignableFrom(v.value().getClass()))
 				return (T) v.value();
 		}
 		return null;
@@ -288,9 +288,9 @@ public class Util
 	final static public void setMetadata(final Metadatable to, final String key, final Object value)
 	{
 		if(value == null)
-			to.removeMetadata(key, ArmorStandStructsPlugin.get());
+			to.removeMetadata(key, SmallBlocksPlugin.get());
 		else
-			to.setMetadata(key, new FixedMetadataValue(ArmorStandStructsPlugin.get(), value));
+			to.setMetadata(key, new FixedMetadataValue(SmallBlocksPlugin.get(), value));
 	}
 
 }

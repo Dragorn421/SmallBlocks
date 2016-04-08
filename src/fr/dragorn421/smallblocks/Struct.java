@@ -1,4 +1,4 @@
-package fr.dragorn421.armorstandstructs;
+package fr.dragorn421.smallblocks;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -226,7 +226,7 @@ public class Struct
 			this.spinTask.cancel();
 		if(rotation == 0 || interval < 1)
 			return false;
-		this.spinTask = Bukkit.getScheduler().runTaskTimer(ArmorStandStructsPlugin.get(), new Runnable() {
+		this.spinTask = Bukkit.getScheduler().runTaskTimer(SmallBlocksPlugin.get(), new Runnable() {
 			@Override
 			public void run()
 			{
