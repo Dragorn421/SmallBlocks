@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.EulerAngle;
+import org.bukkit.util.Vector;
 
 public class Struct
 {
@@ -47,7 +48,7 @@ public class Struct
 		this.spinTask = null;
 	}
 
-	public void toArmorStands(final Location loc, final boolean hollow)
+	public void toArmorStands(final Location loc, final boolean hollow, final double rotation)
 	{
 		loc.setX(loc.getBlockX() - Const.armorStandHeadSideOffset);
 		loc.setY(loc.getBlockY() - Const.armorStandHeadHeightOffset);
@@ -57,6 +58,16 @@ public class Struct
 		this.center.setZ(loc.getZ() + (this.blocks[0][0].length - 1) * Const.armorStandHeadSize / 2D);
 		//System.out.println(" center #" + this.id + " " + this.center);//TODO debug
 		final Location spawn = loc.clone();
+		final Vector offsetX, offsetZ;
+		if(rotation == 0)
+		{
+			offsetX = offsetZ = null;
+		}
+		else
+		{
+			offsetX = new Vector(Const.armorStandHeadSize * Math.cos(rotation), 0, Const.armorStandHeadSize * Math.sin(rotation));
+			offsetZ = new Vector(offsetX.getX(), 0, -offsetX.getZ());
+		}
 		for(int i=0;i<this.blocks.length;i++)
 		{
 			for(int j=0;j<this.blocks[i].length;j++)
@@ -66,10 +77,20 @@ public class Struct
 					final MaterialData b = this.blocks[i][j][k];
 					if(b != null && (!hollow || this.isVisible(i, j, k)))
 					{
-						spawn.setX(loc.getX() + i * Const.armorStandHeadSize);
-						spawn.setY(loc.getY() + j * Const.armorStandHeadSize);
-						spawn.setZ(loc.getZ() + k * Const.armorStandHeadSize);
-						this.convertBlock(b, spawn);
+						if(rotation == 0)
+						{
+							spawn.setX(loc.getX() + i * Const.armorStandHeadSize);
+							spawn.setY(loc.getY() + j * Const.armorStandHeadSize);
+							spawn.setZ(loc.getZ() + k * Const.armorStandHeadSize);
+						}
+						else
+						{
+							final Vector v = offsetX.clone().multiply(i).add(offsetZ.clone().multiply(k));
+							spawn.setX(loc.getX() + v.getX());
+							spawn.setY(loc.getY() + j * Const.armorStandHeadSize);
+							spawn.setZ(loc.getZ() + v.getZ());
+						}
+						this.convertBlock(b, spawn, rotation);
 					}
 				}
 			}
@@ -77,7 +98,7 @@ public class Struct
 	}
 
 	@SuppressWarnings("deprecation")
-	private void convertBlock(final MaterialData b, final Location spawn)
+	private void convertBlock(final MaterialData b, final Location spawn, final double rotation)
 	{
 		Material type = b.getItemType();
 		byte data = b.getData();
@@ -99,7 +120,7 @@ public class Struct
 			final MaterialData newBlock = Util.getBlockForDoubleSlab(type, data);
 			if(Util.isSlab(newBlock.getItemType()))
 			{
-				convertBlock(newBlock, spawn);
+				convertBlock(newBlock, spawn, rotation);
 				spawn.add(0, Const.armorStandHeadSize/2, 0);
 			}
 			type = newBlock.getItemType();
@@ -118,7 +139,13 @@ public class Struct
 		final ArmorStand as = spawn.getWorld().spawn(spawn, ArmorStand.class);
 		as.setGravity(false);
 		if(headPose != null)
+		{
+			if(rotation != 0)
+				headPose.setY(headPose.getY() + rotation);
 			as.setHeadPose(headPose);
+		}
+		else if(rotation != 0)
+			as.setHeadPose(new EulerAngle(0, rotation, 0));
 		as.setHelmet(new ItemStack(type, 1, data));
 		as.setVisible(false);
 		this.armorStands.add(as);

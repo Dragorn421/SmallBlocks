@@ -5,5 +5,5 @@ author: Dragorn421
 commands:
  smallblocks:
   description: SmallBlocks main command
-  usage: /sb <convert [hollow?] | minimify | move [struct id] | remove <struct id> | rotate <struct id> <rotation> | spin <struct id> <rotation> <interval>>
+  usage: /sb <convert [hollow?] [rotation] | minimify | move [struct id] | remove <struct id> | rotate <struct id> <rotation> | spin <struct id> <rotation> <interval>>
   aliases: [sb]

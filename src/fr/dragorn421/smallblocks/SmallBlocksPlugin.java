@@ -14,7 +14,12 @@ import com.sk89q.worldedit.bukkit.selections.Selection;
 
 public class SmallBlocksPlugin extends JavaPlugin// implements Listener
 {
-
+/*
+ * TODO list
+ * magnetic grid
+ * regen with rotation
+ * handle: vines, 2d blocks, (...?)
+ */
 	final static public String MOVING_STRUCT_METADATA_KEY = "moving_struct_armorstandstructs";
 
 	static private SmallBlocksPlugin instance;
@@ -60,10 +65,21 @@ public class SmallBlocksPlugin extends JavaPlugin// implements Listener
 		{
 		case "convert":
 			final boolean hollow = args.length==1?false:Boolean.parseBoolean(args[1]);
+			if(args.length > 2)
+			{
+				try {
+					rotation = Double.parseDouble(args[2]);
+				} catch(final NumberFormatException e) {
+					p.sendMessage(args[2] + " is not a valid number (rotation)");
+					return false;
+				}
+			}
+			else
+				rotation = 0;
 			struct = new Struct(sel.getMinimumPoint(), sel.getMaximumPoint());
 			this.structs.put(struct.getId(), struct);
-			struct.toArmorStands(sel.getMinimumPoint(), hollow);
-			p.sendMessage("Created struct #" + struct.getId());
+			struct.toArmorStands(sel.getMinimumPoint(), hollow, Math.toRadians(rotation));
+			p.sendMessage("Created struct #" + struct.getId() + (rotation==0?"":" rotated by " + Double.toString(rotation) + " degrees"));
 			break;
 		case "minimify":
 			Util.showSelection(sel, p, Material.GLASS);
